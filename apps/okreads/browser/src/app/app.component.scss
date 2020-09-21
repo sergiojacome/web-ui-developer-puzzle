@@ -20,6 +20,9 @@ h1 {
 
   button {
     padding: 0 $spacing-xs;
+    &.mat-contrast {
+      background-color: #000;
+    }
   }
 }
 

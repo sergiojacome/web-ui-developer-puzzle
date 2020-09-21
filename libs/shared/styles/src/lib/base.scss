@@ -2,6 +2,9 @@
 
 * {
   box-sizing: border-box;
+  :focus {
+    outline: 1px #333 !important;
+  }
 }
 
 body {
