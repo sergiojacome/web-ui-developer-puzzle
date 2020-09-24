@@ -5,7 +5,6 @@
       matInput
       type="search"
       placeholder="Search for books to add to your reading list"
-      (input)="searchBooks()"
       formControlName="term"
     />
     <button mat-icon-button matSuffix>
@@ -13,13 +12,12 @@
     </button>
   </mat-form-field>
 </form>
-
 <ng-container *ngIf="searchTerm; else empty">
-  <div *ngIf="!books.length" class="loading">
+  <div *ngIf="!(books$ | async).length" class="loading">
     <mat-spinner></mat-spinner>
   </div>
-  <div class="book-grid" *ngIf="books.length">
-    <div class="book" data-testing="book-item" *ngFor="let b of books">
+  <div class="book-grid" *ngIf="(books$ | async).length">
+    <div class="book" data-testing="book-item" *ngFor="let b of books$ | async">
       <div class="book--title">
         {{ b.title }}
       </div>
