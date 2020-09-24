@@ -7,6 +7,7 @@
 - The project seems to be using angular best practices, which is great, to minimize the impact on the point above.
 - nrwl/nest, nrwl/node & nrwl/workspace need to be updated to fix high security issues
 - Added a loading spinner while the API responds for better UX
+- On book-search.component.ts I changed the code to consume the books$ observable directly, instead of reassigning values on ngOnInit(), the store values should not be mutated like that.
 
 #### 1.2 Accessibility issues
 - The issues found by lighthouse are the following:
