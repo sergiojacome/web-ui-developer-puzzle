@@ -9,6 +9,8 @@ import {
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
+import { from } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'tmo-book-search',
@@ -47,8 +49,13 @@ export class BookSearchComponent {
   }
 
   searchBooks() {
-    if (this.searchForm.value.term) {
-      this.store.dispatch(searchBooks({ term: this.searchTerm }));
+    if (this.searchTerm) {
+      const searchTerm$ = from(this.searchTerm);
+      searchTerm$
+        .pipe(debounceTime(500))
+        .subscribe(
+          () => this.store.dispatch(searchBooks({ term: this.searchTerm }))
+        );
     } else {
       this.store.dispatch(clearSearch());
     }
