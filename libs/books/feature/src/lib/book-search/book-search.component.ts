@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
   clearSearch,
   getAllBooks,
-  ReadingListBook,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
-import { from } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
@@ -27,7 +25,13 @@ export class BookSearchComponent {
   constructor(
     private readonly store: Store,
     private readonly fb: FormBuilder
-  ) {}
+  ) {
+    this.searchForm.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(x => {
+        x.term ? this.searchBooks() : this.store.dispatch(clearSearch())
+      })
+  }
 
   get searchTerm(): string {
     return this.searchForm.value.term;
@@ -49,15 +53,6 @@ export class BookSearchComponent {
   }
 
   searchBooks() {
-    if (this.searchTerm) {
-      const searchTerm$ = from(this.searchTerm);
-      searchTerm$
-        .pipe(debounceTime(500))
-        .subscribe(
-          () => this.store.dispatch(searchBooks({ term: this.searchTerm }))
-        );
-    } else {
-      this.store.dispatch(clearSearch());
-    }
+    this.store.dispatch(searchBooks({ term: this.searchTerm }))
   }
 }
