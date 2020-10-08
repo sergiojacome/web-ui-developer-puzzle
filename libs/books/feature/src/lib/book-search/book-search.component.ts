@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -15,22 +15,26 @@ import { debounceTime } from 'rxjs/operators';
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.scss']
 })
-export class BookSearchComponent {
+export class BookSearchComponent implements OnDestroy {
   books$ = this.store.select(getAllBooks);
 
   searchForm = this.fb.group({
     term: ''
   });
 
+  inputChange$ = this.searchForm.valueChanges
+    .pipe(debounceTime(500))
+    .subscribe(x => {
+      x.term ? this.searchBooks() : this.store.dispatch(clearSearch())
+    })
+
   constructor(
     private readonly store: Store,
     private readonly fb: FormBuilder
-  ) {
-    this.searchForm.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe(x => {
-        x.term ? this.searchBooks() : this.store.dispatch(clearSearch())
-      })
+  ) {}
+
+  ngOnDestroy() {
+    this.inputChange$.unsubscribe();
   }
 
   get searchTerm(): string {
