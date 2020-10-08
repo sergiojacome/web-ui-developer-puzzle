@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
+  confirmedAddToReadingList,
   clearSearch,
   getAllBooks,
   removeFromReadingList,
@@ -10,13 +11,14 @@ import {
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'tmo-book-search',
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.scss']
 })
-export class BookSearchComponent {
+export class BookSearchComponent implements OnDestroy {
   books$ = this.store.select(getAllBooks);
 
   searchForm = this.fb.group({
@@ -27,8 +29,7 @@ export class BookSearchComponent {
     private readonly store: Store,
     private readonly fb: FormBuilder,
     private _snackBar: MatSnackBar
-  ) {}
-
+  ) { }
   get searchTerm(): string {
     return this.searchForm.value.term;
   }
@@ -40,15 +41,24 @@ export class BookSearchComponent {
   }
 
   addBookToReadingList(book: Book) {
-    const mySnackBar = this._snackBar.open(`${book.title} added to reading list`, 'Undo');
-    mySnackBar.afterDismissed().subscribe(info => {
-      if (info.dismissedByAction === true) {
-        this.store.dispatch(removeFromReadingList({ item: {
-          bookId: book.id, ...book
-        } }));
-      }
-    });
     this.store.dispatch(addToReadingList({ book }));
+
+    this.store.select(confirmedAddToReadingList)
+      .pipe(
+        take(1)
+      )
+      .subscribe(b => {
+        const mySnackBar = this._snackBar.open(`${book.title} added to reading list`, 'Undo');
+        mySnackBar.afterDismissed().subscribe(info => {
+          if (info.dismissedByAction === true) {
+            this.store.dispatch(removeFromReadingList({
+              item: {
+                bookId: book.id, ...book
+              }
+            }));
+          }
+        });
+      });
   }
 
   searchExample() {
