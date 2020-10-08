@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -18,7 +18,7 @@ import { take } from 'rxjs/operators';
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.scss']
 })
-export class BookSearchComponent implements OnDestroy {
+export class BookSearchComponent {
   books$ = this.store.select(getAllBooks);
 
   searchForm = this.fb.group({
