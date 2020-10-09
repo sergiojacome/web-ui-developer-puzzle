@@ -35,7 +35,7 @@ export class ReadingListEffects implements OnInitEffects {
         this.http.post('/api/reading-list', book).pipe(
           map(() => {
             if (showSnackBar) {
-              const addBookSnackBar = this.snackBar.open(`${book.title} added to reading list`, 'Undo');
+              const addBookSnackBar = this.snackBar.open(`${book.title} added to reading list`, 'Undo', {duration:3000});
               addBookSnackBar.afterDismissed().subscribe(bookSnackBar => {
                 if (bookSnackBar.dismissedByAction === true) {
                   this.store.dispatch(ReadingListActions.removeFromReadingList({
@@ -63,7 +63,7 @@ export class ReadingListEffects implements OnInitEffects {
         this.http.delete(`/api/reading-list/${item.bookId}`).pipe(
           map(() => {
             if (showSnackBar) {
-              const removeBookSnackBar = this.snackBar.open(`${item.title} removed from reading list`, 'Undo');
+              const removeBookSnackBar = this.snackBar.open(`${item.title} removed from reading list`, 'Undo', {duration:3000});
               removeBookSnackBar.afterDismissed().subscribe(bookSnackBar => {
                 if (bookSnackBar.dismissedByAction === true) {
                   this.store.dispatch(ReadingListActions.addToReadingList({
