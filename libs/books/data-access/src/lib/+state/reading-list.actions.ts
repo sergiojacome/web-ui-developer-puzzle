@@ -41,3 +41,18 @@ export const confirmedRemoveFromReadingList = createAction(
   '[Reading List API] Confirmed remove from list',
   props<{ item: ReadingListItem }>()
 );
+
+export const markBookAsRead = createAction(
+  '[Reading List] Update to list',
+  props<{ book: any }>()
+);
+
+export const failedMarkBookAsRead = createAction(
+  '[Reading List] Failed update to list',
+  props<{ book: any }>()
+);
+
+export const confirmedMarkBookAsRead = createAction(
+  '[Reading List] Confirmed update to list',
+  props<{ book: any }>()
+);

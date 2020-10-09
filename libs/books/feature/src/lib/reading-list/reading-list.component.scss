@@ -19,6 +19,15 @@
     flex-direction: column;
     justify-content: center;
   }
+  .finished {
+    color: #999;
+    font-size: x-small;
+    line-height: 1.5rem;
+  }
+  mat-icon.finished {
+    width: auto;
+    padding-right: .15rem;
+  }
 }
 
 .reading-list-item--cover {
