@@ -35,11 +35,6 @@ describe('When: I use the reading list feature', () => {
     const markAsRead = await $('[data-testing="reading-list-mark-as-read"]');
     await markAsRead.click();
 
-    await browser.wait(
-      ExpectedConditions.textToBePresentInElement(
-        $('[data-testing="reading-list-finished"]'),
-        'Finished on'
-      )
-    );
+    expect($('[data-testing="reading-list-finished"]').isDisplayed()).toBeTruthy();
   });
 });
