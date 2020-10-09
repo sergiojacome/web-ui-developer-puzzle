@@ -14,8 +14,9 @@
         mat-icon-button
         color="warn"
         (click)="removeFromReadingList(b)"
+        [attr.aria-label]="'Remove ' + b.title + ' from reading list'"
       >
-        <mat-icon attr.aria-label="Remove {{b.title}} from reading list">remove_circle</mat-icon>
+        <mat-icon>remove_circle</mat-icon>
       </button>
     </div>
   </div>
