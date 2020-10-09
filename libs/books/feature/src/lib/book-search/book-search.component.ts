@@ -2,16 +2,12 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
-  confirmedAddToReadingList,
   clearSearch,
   getAllBooks,
-  removeFromReadingList,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'tmo-book-search',
@@ -27,9 +23,9 @@ export class BookSearchComponent {
 
   constructor(
     private readonly store: Store,
-    private readonly fb: FormBuilder,
-    private _snackBar: MatSnackBar
-  ) { }
+    private readonly fb: FormBuilder
+  ) {}
+
   get searchTerm(): string {
     return this.searchForm.value.term;
   }
@@ -41,24 +37,7 @@ export class BookSearchComponent {
   }
 
   addBookToReadingList(book: Book) {
-    this.store.dispatch(addToReadingList({ book }));
-
-    this.store.select(confirmedAddToReadingList)
-      .pipe(
-        take(1)
-      )
-      .subscribe(b => {
-        const mySnackBar = this._snackBar.open(`${book.title} added to reading list`, 'Undo');
-        mySnackBar.afterDismissed().subscribe(info => {
-          if (info.dismissedByAction === true) {
-            this.store.dispatch(removeFromReadingList({
-              item: {
-                bookId: book.id, ...book
-              }
-            }));
-          }
-        });
-      });
+    this.store.dispatch(addToReadingList({ book, showSnackBar: true }));
   }
 
   searchExample() {
