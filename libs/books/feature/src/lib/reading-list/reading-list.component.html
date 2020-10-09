@@ -8,7 +8,7 @@
       <div class="reading-list-item--details--author">
         {{ b.authors.join(',') }}
       </div>
-      <div *ngIf="(b.finished)" class="finished">
+      <div *ngIf="(b.finished)" class="finished" data-testing="reading-list-finished">
         <mat-icon class="finished">done</mat-icon>Finished on {{b.finishedDate | date: 'dd/MM/yyyy'}}
       </div>
     </div>
@@ -21,6 +21,7 @@
             [attr.aria-label]="'Mark ' + b.title + ' as read'"
             (click)="markAsRead(b)"
             *ngIf="(!b.finished)"
+            data-testing="reading-list-mark-as-read"
           >
             <mat-icon>done</mat-icon>
           </button>
